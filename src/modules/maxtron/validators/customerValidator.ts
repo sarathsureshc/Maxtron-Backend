@@ -4,8 +4,10 @@ export const customerSchema = z.object({
     customer_name: z.string().min(2, "Customer name is required and should be at least 2 characters"),
     customer_code: z.string().min(2, "Customer code is required"),
     gst_no: z.string().optional().nullable().or(z.literal('')),
+    // One number, or several joined with commas ("9876543210, 9447001122"); the column is varchar(50)
     mobile_no: z.string()
-        .regex(/^[0-9+\-\s]{7,15}$/, "Mobile number must be between 7 to 15 digits")
+        .max(50, "Contact numbers are too long (up to 3 numbers)")
+        .regex(/^[0-9+\-\s]{7,15}(\s*,\s*[0-9+\-\s]{7,15})*$/, "Each contact number must be between 7 to 15 digits")
         .optional()
         .nullable()
         .or(z.literal('')),
